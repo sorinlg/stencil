@@ -1,0 +1,18 @@
+{
+    "Age": 6,
+    "Height": 1.85,
+    "Name": "{{ range $i, $v := split .Env.CUCU " " }}{{if $i}},{{end}}{{$v}}{{end}}",
+    "Parents": [
+        "Gomez",
+        "Morticia",
+        "{{ .Env.BAU }}"
+    ],
+    "Appearence": {
+        "Nose": "small",
+        "Construction": "fit",
+        "Limbs": {
+            "Hands": "large",
+            "Feet": 2
+        }
+    },
+}
