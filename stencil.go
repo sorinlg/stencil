@@ -5,8 +5,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"bitbucket.org/lgslab/stencil/opts"
-	"bitbucket.org/lgslab/stencil/render"
+	"github.com/sorinlg/stencil/opts"
+	"github.com/sorinlg/stencil/render"
 )
 
 // setup log
