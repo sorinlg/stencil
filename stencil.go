@@ -5,8 +5,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"./opts"
-	"./template"
+	"github.com/sorinlg/stencil/opts"
+	"github.com/sorinlg/stencil/template"
 )
 
 // setup log

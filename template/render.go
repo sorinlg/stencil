@@ -8,7 +8,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"../error"
+	"github.com/sorinlg/stencil/error"
 )
 
 func Render(template_path string, destination_path string) {
