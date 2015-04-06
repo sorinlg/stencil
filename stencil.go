@@ -5,8 +5,8 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/sorinlg/stencil/opts"
-	"github.com/sorinlg/stencil/render"
+	"./opts"
+	"./template"
 )
 
 // setup log
@@ -21,7 +21,6 @@ func main() {
 	args := os.Args[1:]
 
 	for _, arg := range args {
-		render.Render(opts.Parse_argument(arg))
+		template.Render(opts.Parse_argument(arg))
 	}
-
 }

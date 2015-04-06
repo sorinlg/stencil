@@ -1,7 +1,7 @@
 {
     "Age": 6,
     "Height": 1.85,
-    "Name": "{{ range $i, $v := split .Env.CUCU " " }}{{if $i}},{{end}}{{$v}}{{end}}",
+    "Name": "{{ exclude .Env.HOST_LIST .Env.SELF_IP "," }}",
     "Parents": [
         "Gomez",
         "Morticia",
