@@ -1,22 +1,24 @@
 package template
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
+	"regexp"
 	"text/template"
 
 	log "github.com/Sirupsen/logrus"
 
-	"github.com/sorinlg/stencil/error"
+	e "github.com/sorinlg/stencil/err"
 )
 
 func Render(template_path string, destination_path string) {
 	// load custom template functions
 	funcMap := template.FuncMap{
-		"split":   strings.Split,
-		"list":    List,
-		"exclude": ListExclude,
+		"GenListFromString":  GenListFromString,
+		"RemoveItemFromList": RemoveItemFromList,
+		"Default":            Default,
+		"Panic":              Panic,
 	}
 
 	// init template object and add custom functions
@@ -29,19 +31,29 @@ func Render(template_path string, destination_path string) {
 		"destination": destination_path,
 	}).Debug("Input")
 
+	// read template file
+	file, err := ioutil.ReadFile(template_path)
+	e.Check(err)
+
+	// remove escaped endlines
+	file_contents := string(file)
+	re := regexp.MustCompile("\\\\[[:space:]]*")
+	file_contents = re.ReplaceAllString(file_contents, "")
+
 	// parse template
-	tmpl, err := tmpl.ParseFiles(template_path)
-	error.Check(err)
+	tmpl, err = tmpl.Parse(file_contents)
+	e.Check(err)
 
 	// prepare destination
 	destination := os.Stdout
 	if destination_path != "" {
 		destination, err = os.Create(destination_path)
-		error.Check(err)
+		e.Check(err)
 		defer destination.Close()
 	}
 
 	// execute template
-	err = tmpl.ExecuteTemplate(destination, template_name, &Context{})
-	error.Check(err)
+	err = tmpl.ExecuteTemplate(destination, template_name, *NewContext())
+	// err = tmpl.ExecuteTemplate(destination, template_name, &Context{})
+	e.Check(err)
 }

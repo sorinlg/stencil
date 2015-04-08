@@ -1,0 +1,24 @@
+{
+    "bootstrap_expect": {{ Panic .Env.BOOTSTRAP_EXPECT }},
+    "server": true,
+    "datacenter": "{{ Panic .Env.DATACENTER }}",
+    "data_dir": "/var/consul",
+    "ui_dir": "/home/consul/dist",
+    {{ if .Env.WHISPER_PROTO_KEY }}\
+        "encrypt": "{{ .Env.WHISPER_PROTO_KEY }}",
+    {{ end }}\
+    "log_level": "INFO",
+    "advertise_addr": "{{ .Env.SELF_IP }}",
+    "client_addr": "0.0.0.0",
+    {{if .Env.CONSUL_SERVER_LIST }}\
+        "start_join": [ \
+        {{ range $i, $v := RemoveItemFromList .Env.SELF_IP (GenListFromString .Env.CONSUL_SERVER_LIST " ") }}\
+            {{if $i}}\
+                , \
+            {{end}}\
+            "{{$v}}"\
+        {{end}} \
+        ],
+    {{end}}\
+    "disable_update_check": true
+}

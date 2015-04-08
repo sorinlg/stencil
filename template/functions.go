@@ -1,38 +1,56 @@
 package template
 
 import (
+	"fmt"
 	"strings"
+
+	e "github.com/sorinlg/stencil/err"
 )
 
-func List(list string, delim string) string {
-	slice := strings.Split(list, " ")
-	result := ""
-	for i, v := range slice {
-		if i != 0 {
-			result += delim
-		}
-		result += v
+func Panic(s interface{}) (string, error) {
+	if s != nil {
+		return s.(string), nil
 	}
 
-	return result
+	return "", fmt.Errorf("nil value encountered")
 }
 
-func Pos(slice []string, value string) int {
-	for i, v := range slice {
-		if v == value {
-			return i
+func Default(args ...interface{}) (string, error) {
+	if len(args) == 0 {
+		return "", fmt.Errorf("default called with no values!")
+	}
+
+	if len(args) > 0 {
+		if args[0] != nil {
+			return args[0].(string), nil
 		}
 	}
-	return -1
 
+	if len(args) > 1 {
+		return args[1].(string), nil
+	}
+
+	return "", fmt.Errorf("default called with no default value")
 }
 
-func ListExclude(list string, item string, delim string) string {
-	slice := strings.Split(list, " ")
-	pos := Pos(slice, item)
-	shortSlice := append(slice[:pos], slice[pos+1:]...)
-	shortList := strings.Join(shortSlice, " ")
+func GenListFromString(s string, sep string) []string {
+	return strings.Split(s, sep)
+}
 
-	result := List(shortList, delim)
-	return result
+func RemoveItemFromList(i string, l []string) []string {
+	pos, err := getItemIndexFromList(l, i)
+	e.Check(err)
+
+	l = append(l[:pos], l[pos+1:]...)
+	return l
+}
+
+func getItemIndexFromList(l []string, s string) (int, error) {
+	for i, v := range l {
+		if v == s {
+			return i, nil
+		}
+	}
+	return -1, fmt.Errorf("item %s cannot be found in list %s", s, l)
+
 }

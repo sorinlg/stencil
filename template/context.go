@@ -6,9 +6,17 @@ import (
 )
 
 type Context struct {
+	Env map[string]string
 }
 
-func (c *Context) Env() map[string]string {
+func NewContext() *Context {
+	c := &Context{}
+	c.Env = c.env()
+
+	return c
+}
+
+func (c *Context) env() map[string]string {
 	env := make(map[string]string)
 	for _, i := range os.Environ() {
 		sep := strings.Index(i, "=")
